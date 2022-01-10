@@ -1,6 +1,12 @@
 console.log('Hello console!');
 
-let randomNumber = Math.floor(Math.random() * 100) + 1;
+const minLimit = 1;
+const maxLimit = 100;
+
+
+let randomNumber = Math.floor(Math.random() * maxLimit) + minLimit;
+console.log('random', randomNumber, 'limit', maxLimit, minLimit);
+
 
 const guesses = document.querySelector('.guesses');
 const lastResult = document.querySelector('.lastResult');
@@ -8,8 +14,11 @@ const lowOrHi = document.querySelector('.lowOrHi');
 
 const guessSubmit = document.querySelector('.guessSubmit');
 const guessField = document.querySelector('.guessField');
+const resultText = document.querySelector('.resultText');
+
 
 let guessCount = 1;
+let startTime;
 let resetButton;
 guessField.focus();
 
@@ -18,6 +27,7 @@ function checkGuess() {
   guessSubmit.addEventListener('click', checkGuess);
   const userGuess = Number(guessField.value);
   if (guessCount === 1) {
+    startTime = Date.now();
     guesses.textContent = 'Previous guesses: ';
   }
   guesses.textContent += userGuess + ' ';
@@ -45,6 +55,14 @@ function checkGuess() {
   guessField.value = '';
   guessField.focus();
 }
+guessSubmit.addEventListener('click', checkGuess);
+const getResultText = (startTime, endTime, numberOfGuesses) => {
+  if (numberOfGuesses === 1) {
+    return 'Damn, you are a one lucky --beep--!';
+  }
+  return `It took ${((endTime - startTime)/1000)} seconds and
+          ${numberOfGuesses} tries to guess it right.`;
+};
 
 function setGameOver() {
   guessField.disabled = true;
@@ -53,6 +71,8 @@ function setGameOver() {
   resetButton.textContent = 'Start new game';
   document.body.append(resetButton);
   resetButton.addEventListener('click', resetGame);
+  resultText.textContent = getResultText(startTime, Date.now(), guessCount);
+
 }
 
 function resetGame() {
@@ -71,7 +91,10 @@ function resetGame() {
 
   lastResult.style.backgroundColor = 'white';
 
-  randomNumber = Math.floor(Math.random() * 100) + 1;
+  randomNumber = Math.floor(Math.random() * maxLimit) + minLimit;
 }
 
 
+
+
+/*author Johannes Jokinen*/

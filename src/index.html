@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
     <meta charset="utf-8"/>
     <title><%= htmlWebpackPlugin.options.title %></title>
     <link rel="stylesheet" href="assets/styles.css">
   </head>
   <body>
     <p>
-      Hello! Open the developer tools, please.<br />
-      Start by editing the files in <code>src/</code> folder.
+      Number game
     </p>
 
     <div class="resultParas">
-      <p class="guesses"></p>
-      <p class="lastResult"></p>
-      <p class="lowOrHi"></p>
+        <p class="guesses"></p>
+        <p class="lastResult"></p>
+        <p class="resultText"></p>
+        <p class="lowOrHi"></p>
     </div>
 
     <label for="guessField">Enter a guess: </label><input type="text" id="guessField" class="guessField">
@@ -22,3 +22,4 @@
 
   </body>
 </html>
+

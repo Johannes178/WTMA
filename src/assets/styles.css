@@ -1,3 +1,26 @@
 body {
-  margin: 10%;
+  margin: 0 auto;
+  padding: 10px;
+  position: relative;
+  background-color: #2185C5;
+  font-family: 'Lobster', cursive;
+
 }
+
+.resultParas{
+
+  background-color: lightblue;
+  position: relative;
+  animation-name: example;
+  animation-duration: 2s;
+  animation-delay: 1s;}
+
+@keyframes example {
+  0%   {background-color:lightblue; left:0; top:0;}
+  50%  {background-color:lightblue; left:200px; top:0;}
+  100%  {background-color:lightblue; left:0; top:0;}}
+
+
+
+
+/*author Johannes Jokinen*/
