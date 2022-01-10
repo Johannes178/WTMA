@@ -1,0 +1,8 @@
+.DS_Store
+*.swp
+.project
+.idea/
+npm-debug.log
+.jshintrc
+node_modules/
+dist/
