@@ -6,3 +6,4 @@ npm-debug.log
 .jshintrc
 node_modules/
 dist/
+.idea
