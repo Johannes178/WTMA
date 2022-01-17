@@ -1,8 +1,28 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
 body {
-  margin: 10%;
+  width: 100%;
+  font-family: 'Lobster', cursive;
 }
 
+.container {
+  height: 20%;
+  width: 50%;
+  position: absolute;
+}
 
+.buttons {
+  display: flex;
+  margin-top: 10px;
+}
+
+button {
+  width: 100px;
+  border: 9px solid black;
+}
 
 
 /*author Johannes Jokinen*/
