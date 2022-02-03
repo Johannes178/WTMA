@@ -1,5 +1,11 @@
-  const proxYUrl = 'https://api.allorigins.win/get?url=';
+  const proxyUrl = 'https://api.allorigins.win/get?url=';
 
+/**
+   *
+   * @param {String} url API endpoint
+   * @param {Boolean} useProxy use proxy in fetch or not
+   * @returns {Object} json data
+   */
 
 
 

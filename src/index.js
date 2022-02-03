@@ -1,99 +1,34 @@
-'use strict';
+const netPromise = fetch ('https://api.github.com/users/mattpe');
 
-import SodexoData from "/modules/sodexodata";
-import { getParsedMenuFazer } from "/modules/fazerdata";
-
-//Navigaatio
-const toggleBtn = document.querySelector('.toggle');
-const naviList = document.querySelector('.nav-list');
-
-toggleBtn.addEventListener('click', () => {
-  naviList.classList.toggle('active');
+netPromise.then(data => data.json()).then((json) => {
+  console.log(json);
+  fetch(json.repos_url).then(data => data.json).then(data => {
+    console.log(data);
+  });
+}).catch(error => {
+  //do something with the error...
 });
 
-let lang = 'fi';
+console.log('promise 1', netPromise);
+console.log('moro');
 
-/**
- * Sorts an array alphapetically
- *
- * @param {Array} courses - Menu array
- * @param {Array} order - 'asc' or 'desc'
- * @returns {Array} sorted menu
- */
-const sortCourses = (courses, order = 'asc') => {
-  let sortedMenu = courses.sort();
-  if (order === 'desc') {
-    sortedMenu.reverse();
+//Async - await & error handling
+
+const getGithubUserProfile = async username => {
+  try {
+    const response = await fetch(`https://api.github.com/users/${username}`);
+    if (!response.ok) {
+      throw new Error('problem: ' + response.statusText);
+    }
+    const userData = await response.json();
+  } catch (error) {
+    console.error(error);
+    //In real case you should notify user
   }
-  return sortedMenu;
+  return userData;
 };
-
-/**
- * Renders html list items from menu data
- *
- * @param {string} restaurant - name of the selector/restaurant
- * @param {Array} menu - menu data
- */
-const renderMenu = (restaurant, menu) => {
-  const list = document.querySelector('#' + restaurant);
-  list.innerHTML = '';
-  for (const item of menu) {
-    const listItem = document.createElement('li');
-    listItem.textContent = item;
-    list.appendChild(listItem);
-  }
-};
-
-/**
- * Picks a random course item from an array
- *
- * @param {Array} courses
- * @returns {string} course
- */
-const pickRandomCourse = courses => {
-  const randomIndex = Math.floor(Math.random() * courses.length);
-  return courses[randomIndex];
-};
-const displayRandomCourse = () => {
-  if(lang === 'fi'){
-    alert('Sodexo: '+ pickRandomCourse(SodexoData.coursesFi) + '\n'+ 'Fazer: '+ pickRandomCourse(getParsedMenuFazer('fi')));
-
-  }else{
-    alert('Sodexo: '+ pickRandomCourse(SodexoData.coursesEn) + '\n'+ 'Fazer: '+ pickRandomCourse(getParsedMenuFazer('en')));
-  }
-
-};
-
-const switchLanguage = () => {
-  if (lang === 'fi') {
-    lang = 'en';
-    renderMenu('sodexo', SodexoData.coursesEn);
-    renderMenu('fazer', getParsedMenuFazer('en'));
-  } else {
-    lang = 'fi';
-    renderMenu('sodexo', SodexoData.coursesFi);
-    renderMenu('fazer', getParsedMenuFazer('fi'));
-  }
-};
-
-const renderSortedMenu = () => {
-  if(lang === 'fi'){
-    renderMenu('sodexo', sortCourses(SodexoData.coursesFi));
-    renderMenu('fazer', sortCourses(getParsedMenuFazer('fi')));
-  }else if (lang === 'en'){
-    renderMenu('sodexo', sortCourses(SodexoData.coursesEn));
-    renderMenu('fazer', sortCourses(getParsedMenuFazer('en')));
-  }
-};
-
-const init = () => {
-  renderMenu('sodexo', SodexoData.coursesFi);
-  renderMenu('fazer', getParsedMenuFazer('fi'));
-  document.querySelector('#switch-lang').addEventListener('click', switchLanguage);
-  document.querySelector('#sort-menu').addEventListener('click', renderSortedMenu);
-  document.querySelector('#pick-dish').addEventListener('click', displayRandomCourse);
-};
-
-init();
+getGithubUserProfile('mattpe').then(data => {
+  console.log(data);
+});
 
 /*author Johannes Jokinen*/
