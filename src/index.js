@@ -1,80 +1,113 @@
-console.log("Hello console!");
+"use strict";
 
-("use strict");
+import SodexoData from "./modules/Sodexo";
+import { getParsedMenuFazer } from "./modules/Fazer";
 
-const coursesEn = [
-  "Hamburger, cream sauce and poiled potates",
-  "Goan style fish curry and whole grain rice",
-  "Vegan Chili sin carne and whole grain rice",
-  "Broccoli puree soup, side salad with two napas",
-  "Lunch baguette with BBQ-turkey filling",
-  "Cheese / Chicken / Vege / Halloum burger and french fries",
-];
+//Navigaatio
+const toggleBtn = document.querySelector(".toggle");
+const naviList = document.querySelector(".nav-list");
 
-const coursesFi = [
-  "Jauhelihapihvi, ruskeaa kermakastiketta ja keitettyä perunaa",
-  "Goalaista kalacurrya ja täysjyväriisiä",
-  "Vegaani Chili sin carne ja täysjyväriisi",
-  "Parsakeittoa,lisäkesalaatti kahdella napaksella",
-  "Lunch baguette with BBQ-turkey filling",
-  "Juusto / Kana / Kasvis / Halloumi burgeri ja ranskalaiset",
-];
-
-const menu = document.querySelector(".menu");
-const langBtn = document.querySelector(".lang");
-const sortBtn = document.querySelector(".sort");
-const rndBtn = document.querySelector(".random");
-
-let finnish = true;
-
-coursesEn.sort();
-coursesFi.sort();
-
-coursesFi.forEach((annos) => {
-  menu.innerHTML += '<li class="">' + annos + "</li>";
+toggleBtn.addEventListener("click", () => {
+  naviList.classList.toggle("active");
 });
 
-const changeLang = () => {
-  menu.innerHTML = "";
-  if (finnish) {
-    coursesEn.forEach((course) => {
-      menu.innerHTML += '<li class="">' + course + "</li>";
-    });
-    finnish = false;
-  } else {
-    coursesFi.forEach((annos) => {
-      menu.innerHTML += '<li class="">' + annos + "</li>";
-    });
-    finnish = true;
+let lang = "fi";
+
+/**
+ * Sorts an array alphapetically
+ *
+ * @param {Array} courses - Menu array
+ * @param {Array} order - 'asc' or 'desc'
+ * @returns {Array} sorted menu
+ */
+const sortCourses = (courses, order = "asc") => {
+  let sortedMenu = courses.sort();
+  if (order === "desc") {
+    sortedMenu.reverse();
+  }
+  return sortedMenu;
+};
+
+/**
+ * Renders html list items from menu data
+ *
+ * @param {string} restaurant - name of the selector/restaurant
+ * @param {Array} menu - menu data
+ */
+const renderMenu = (restaurant, menu) => {
+  const list = document.querySelector("#" + restaurant);
+  list.innerHTML = "";
+  for (const item of menu) {
+    const listItem = document.createElement("li");
+    listItem.textContent = item;
+    list.appendChild(listItem);
   }
 };
 
-langBtn.addEventListener("click", changeLang);
-
-const sortMenu = () => {
-  menu.innerHTML = "";
-  if (finnish) {
-    coursesFi.reverse();
-    coursesFi.forEach((annos) => {
-      menu.innerHTML += '<li class="">' + annos + "</li>";
-    });
+/**
+ * Picks a random course item from an array
+ *
+ * @param {Array} courses
+ * @returns {string} course
+ */
+const pickRandomCourse = (courses) => {
+  const randomIndex = Math.floor(Math.random() * courses.length);
+  return courses[randomIndex];
+};
+const displayRandomCourse = () => {
+  if (lang === "fi") {
+    alert(
+      "Sodexo: " +
+        pickRandomCourse(SodexoData.coursesFi) +
+        "\n" +
+        "Fazer: " +
+        pickRandomCourse(getParsedMenuFazer("fi"))
+    );
   } else {
-    coursesEn.reverse();
-    coursesEn.forEach((course) => {
-      menu.innerHTML += '<li class="">' + course + "</li>";
-    });
+    alert(
+      "Sodexo: " +
+        pickRandomCourse(SodexoData.coursesEn) +
+        "\n" +
+        "Fazer: " +
+        pickRandomCourse(getParsedMenuFazer("en"))
+    );
   }
 };
 
-sortBtn.addEventListener("click", sortMenu);
-
-const randomCourse = () => {
-  const rand = Math.floor(Math.random() * coursesFi.length);
-  if (finnish) {
-    alert(coursesFi[rand]);
+const switchLanguage = () => {
+  if (lang === "fi") {
+    lang = "en";
+    renderMenu("sodexo", SodexoData.coursesEn);
+    renderMenu("fazer", getParsedMenuFazer("en"));
   } else {
-    alert(coursesEn[rand]);
+    lang = "fi";
+    renderMenu("sodexo", SodexoData.coursesFi);
+    renderMenu("fazer", getParsedMenuFazer("fi"));
   }
 };
 
-rndBtn.addEventListener("click", randomCourse);
+const renderSortedMenu = () => {
+  if (lang === "fi") {
+    renderMenu("sodexo", sortCourses(SodexoData.coursesFi));
+    renderMenu("fazer", sortCourses(getParsedMenuFazer("fi")));
+  } else if (lang === "en") {
+    renderMenu("sodexo", sortCourses(SodexoData.coursesEn));
+    renderMenu("fazer", sortCourses(getParsedMenuFazer("en")));
+  }
+};
+
+const init = () => {
+  renderMenu("sodexo", SodexoData.coursesFi);
+  renderMenu("fazer", getParsedMenuFazer("fi"));
+  document
+    .querySelector("#switch-lang")
+    .addEventListener("click", switchLanguage);
+  document
+    .querySelector("#sort-menu")
+    .addEventListener("click", renderSortedMenu);
+  document
+    .querySelector("#pick-dish")
+    .addEventListener("click", displayRandomCourse);
+};
+
+init();
